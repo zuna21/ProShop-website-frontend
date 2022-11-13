@@ -22,7 +22,7 @@
           <mat-form-field appearance="fill">
             <mat-label>Number</mat-label>
             <mat-select [(value)]="storageProduct.qty">
-              <mat-option *ngFor="let num of getArray(storageProduct.countInStock)" [value]="num">{{num}}</mat-option>
+              <mat-option *ngFor="let num of getArray(storageProduct.countInStock)" [value]="num" (click)="onMatOption(storageProduct._id, num)">{{num}}</mat-option>
             </mat-select>
           </mat-form-field>
         </div>

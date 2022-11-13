@@ -66,4 +66,17 @@ export class CartComponent implements OnInit {
     return niz;
   }
 
+  onMatOption(storedProductId: number, storedNum: number) {
+    let storedProducts = JSON.parse(localStorage['selectedProducts'])
+    let storedProduct = storedProducts.find(element => {
+      return element._id === storedProductId;
+    })
+    storedProducts = storedProducts.filter(element => {
+      return element._id !== storedProductId
+    });
+    storedProduct['qty'] = storedNum;
+    storedProducts.push(storedProduct);
+    localStorage.setItem('selectedProducts', JSON.stringify(storedProducts));
+  }
+
 }
