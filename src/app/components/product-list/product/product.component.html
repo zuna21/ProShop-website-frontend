@@ -1,0 +1,67 @@
+<button class="btn btn-dark m-3" (click)="goBack()">Go Back</button>
+<div class="row m-3">
+  <div class="text-center" *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+  <div class="col-md-6">
+    <img src="http://127.0.0.1:8000{{product.image}}" alt="{{product.name}}" class="fluid">
+  </div>
+
+  <div class="col-md-3">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <h3>{{product.name}}</h3>
+      </li>
+
+      <li class="list-group-item">
+        <h3>{{product.rating}} from {{product.numReviews}} reviews</h3>
+      </li>
+
+      <li class="list-group-item">
+          Price: ${{product.price}}
+      </li>
+
+      <li class="list-group-item">
+        Description: {{product.description}}
+    </li>
+    </ul>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col">Price:</div>
+            <div class="col"><strong>{{product.price}}</strong></div>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col">Status:</div>
+            <div class="col">{{product.countInStock > 0 ? 'In Stock': 'Out Of Stock'}}</div>
+          </div>
+        </li>
+
+        <li class="list-group-item" *ngIf="inStockArray.length">
+          <div class="row">
+            <div class="col">Qty</div>
+            <div class="col xs-auto my-1">
+                <mat-form-field appearance="fill">
+                  <mat-label>Number</mat-label>
+                  <mat-select [(value)]="selectedNumber">
+                    <mat-option *ngFor="let num of inStockArray" [value]="num">{{num}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+          </div>
+        </li>
+
+        <li class="list-group-item">
+          <button class="btn btn-dark" [disabled]="product.countInStock === 0" type="button" (click)="onCart()">Add to Cart</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
