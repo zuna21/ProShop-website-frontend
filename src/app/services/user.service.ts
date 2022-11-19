@@ -32,4 +32,19 @@ export class UserService {
       })
     });
   }
+
+  updateUser(name: string, email: string, password: string, token: string) {
+    return this.http.put<any>('http://127.0.0.1:8000/api/users/profile/update/',
+    {
+      name: name,
+      email: email,
+      password: password
+    },
+    {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      })
+    });
+  }
 }

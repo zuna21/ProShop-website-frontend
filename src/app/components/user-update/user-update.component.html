@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="col-lg-4 col-md-4">
+    <div class="row">
+      <div class="text-center" *ngIf="isLoading">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      <h1>USER PROFILE</h1>
+    </div>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" formControlName="name">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="email" formControlName="email">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" formControlName="password">
+        <label for="password1" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="password1" formControlName="password1">
+      </div>
+      <div class="btn-group my-3">
+        <button class="btn btn-dark" type="submit" [disabled]="!profileForm.valid">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
