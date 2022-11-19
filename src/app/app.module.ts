@@ -11,6 +11,8 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
 import { CartComponent } from './components/cart/cart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSelectModule} from '@angular/material/select';
+import { LoginComponent } from './components/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,10 +21,12 @@ import {MatSelectModule} from '@angular/material/select';
     ProductListComponent,
     ProductComponent,
     LoadingSpinnerComponent,
-    CartComponent
+    CartComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

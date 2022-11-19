@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Product } from 'src/app/interfaces/interfaces.interface';
 import { ProductService } from 'src/app/services/product.service';
 
@@ -13,7 +13,7 @@ export class CartComponent implements OnInit {
   products;
   isCartEmpty: boolean = true;
 
-  constructor(private route: ActivatedRoute, private productService: ProductService) {}
+  constructor(private route: ActivatedRoute, private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(
@@ -77,6 +77,16 @@ export class CartComponent implements OnInit {
     storedProduct['qty'] = storedNum;
     storedProducts.push(storedProduct);
     localStorage.setItem('selectedProducts', JSON.stringify(storedProducts));
+  }
+
+  onRemoveItem(productId: number) {
+    let storedProducts = JSON.parse(localStorage['selectedProducts']);
+    storedProducts = storedProducts.filter(element => {
+      return element._id !== productId
+    });
+    localStorage.setItem('selectedProducts', JSON.stringify(storedProducts));
+    this.router.navigate(['cart']);
+
   }
 
 }
