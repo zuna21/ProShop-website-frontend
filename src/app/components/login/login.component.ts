@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   public errorMessage: string = null;
   public isLoading: boolean = false;
 
-  profileForm = new FormGroup({
+  public profileForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [Validators.required])
   })

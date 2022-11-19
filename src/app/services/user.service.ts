@@ -18,4 +18,18 @@ export class UserService {
       })
     });
   }
+
+  registerUser(name: string, email: string, password: string) {
+    return this.http.post<any>('http://127.0.0.1:8000/api/users/register/',
+    {
+      name: name,
+      email: email,
+      password: password
+    },
+    {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
+  }
 }

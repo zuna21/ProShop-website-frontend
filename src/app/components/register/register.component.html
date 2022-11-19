@@ -12,12 +12,20 @@
     <div class="form-group">
       <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
         <div class="row">
+          <div class="form-label">Name</div>
+          <input type="text" class="form-control" formControlName="name">
+        </div>
+        <div class="row">
           <div class="form-label">Email</div>
           <input type="email" class="form-control" formControlName="email">
         </div>
         <div class="row">
           <div class="form-label my-2">Password</div>
           <input type="password" class="form-control" formControlName="password">
+        </div>
+        <div class="row">
+          <div class="form-label my-2">Confirm Password</div>
+          <input type="password" class="form-control" formControlName="password1">
         </div>
         <div class="row m-3">
           <div class="btn-group">
@@ -26,7 +34,7 @@
         </div>
       </form>
       <div class="row">
-        <p>Don't have an account? <a routerLink="/register">Register</a></p>
+        <p>Already have an account? <a routerLink="/login">Login</a></p>
       </div>
     </div>
   </div>
