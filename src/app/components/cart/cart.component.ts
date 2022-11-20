@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Product } from 'src/app/interfaces/interfaces.interface';
 import { ProductService } from 'src/app/services/product.service';
 
@@ -9,84 +10,89 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  product: Product;
-  products;
-  isCartEmpty: boolean = true;
+
+  public isEmpty: boolean;
+  public products: Product[] = [];
 
   constructor(private route: ActivatedRoute, private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(
-      {
-        next: (resp) => {
-          if(resp['id']) {
-            this.isCartEmpty = false;
-            this.productService.get_product(resp['id']).subscribe(
-              {
-                next: (prod) => {
-                  this.product = prod;
-                  this.route.queryParams.subscribe(
-                    {
-                      next: (resp: Params) => {
-                        this.product['qty'] = parseInt(resp.qty);
-                        if(localStorage.getItem('selectedProducts')) {
-                          this.products = JSON.parse(localStorage.getItem('selectedProducts'));
-                          this.products = [...this.products, this.product];
-                          localStorage.setItem('selectedProducts', JSON.stringify(this.products));
-                        } else {
-                          this.products = [
-                            this.product
-                          ];
-                          localStorage.setItem('selectedProducts', JSON.stringify(this.products));
-                        }
-                      }
-                    }
-                  )
-                }
-              }
-            )
-          } else {
+    if(this.route.snapshot.queryParams['qty']) {
+      const amount = this.route.snapshot.queryParams['qty'];
+      const prodId = this.route.snapshot.params['id'];
+
+      this.productService.get_product(prodId).subscribe(
+        {
+          next: (resp) => {
+            let product = resp;
+            product['qty'] = amount;
             if(localStorage.getItem('selectedProducts')) {
-              this.isCartEmpty = false;
-              this.products = JSON.parse(localStorage.getItem('selectedProducts'));
+              let localProducts = JSON.parse(localStorage.getItem('selectedProducts'));
+              localProducts.push(product);
+              localStorage.setItem('selectedProducts', JSON.stringify(localProducts));
             } else {
-              this.isCartEmpty = true;
+              let localProducts = [];
+              localProducts.push(product);
+              localStorage.setItem('selectedProducts', JSON.stringify(localProducts));
             }
+
+            this.router.navigate(['/cart']);
           }
         }
+      )
+    } else {
+
+      // Kad udjes direktno u /card
+      this.products = JSON.parse(localStorage.getItem('selectedProducts'));
+
+      if(this.products) {
+        this.isEmpty = false;
+      } else {
+        this.isEmpty = true;
       }
-    )
-  }
 
-  getArray(num: number) {
-    const niz = [];
-    for(let i=1; i<=num; i++) {
-      niz.push(i);
     }
-    return niz;
   }
 
-  onMatOption(storedProductId: number, storedNum: number) {
-    let storedProducts = JSON.parse(localStorage['selectedProducts'])
-    let storedProduct = storedProducts.find(element => {
-      return element._id === storedProductId;
-    })
-    storedProducts = storedProducts.filter(element => {
-      return element._id !== storedProductId
-    });
-    storedProduct['qty'] = storedNum;
-    storedProducts.push(storedProduct);
-    localStorage.setItem('selectedProducts', JSON.stringify(storedProducts));
+
+
+  getQTY(amount: number) {
+    let returnedArray = [];
+    for(let i=1; i<=amount; i++) {
+      returnedArray.push(i);
+    }
+
+    return returnedArray;
   }
 
-  onRemoveItem(productId: number) {
-    let storedProducts = JSON.parse(localStorage['selectedProducts']);
-    storedProducts = storedProducts.filter(element => {
-      return element._id !== productId
+  onChangeProductQTY(index: number, amount: number) {
+    let newProduct = this.products.find((prod) => {
+      return parseInt(prod._id) === index;
     });
-    localStorage.setItem('selectedProducts', JSON.stringify(storedProducts));
-    this.router.navigate(['cart']);
+    newProduct['qty'] = amount;
+    let newProducts = this.products.filter((prod) => {
+      return parseInt(prod._id) !== index;
+    });
 
+    newProducts.push(newProduct);
+    localStorage.setItem('selectedProducts', JSON.stringify(newProducts));
+  }
+
+  subtotal() {
+    return this.products.length;
+  }
+
+  refresh(): void {
+    window.location.reload();
+}
+
+  onDelete(index: number) {
+    const newProducts = this.products.filter((prod) => {
+      return parseInt(prod._id) !== index
+    });
+
+    localStorage.setItem('selectedProducts', JSON.stringify(newProducts));
+    this.refresh();
   }
 
 }
